@@ -36,6 +36,12 @@
       yarn dev
       ```
 
+## Run framesjs debugger
+
+just run command `frames` and the debugger will be ready at `http://localhost:3010`
+
+- frame code is in `src/app/frames/route.tsx`
+
 ## License
 
 `wownar-react-sdk` is released under the MIT License. This license permits free use, modification, and distribution of the software, with the requirement that the original copyright and license notice are included in any substantial portion of the work.
