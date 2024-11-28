@@ -17,6 +17,7 @@ const Home = () => {
   const { displayName, pfp } = useApp();
   const [title, setTitle] = useState("");
   const [frameId, setFrameId] = useState<string | null>(null);
+  const [isPosting, setIsPosting] = useState(false);
 
   const frameUrl = frameId
     ? `${window.location.origin}/frames?id=${frameId}`
@@ -26,7 +27,12 @@ const Home = () => {
     if (!frameUrl) return;
 
     const { signerUuid } = user;
+    setIsPosting(true);
+
     try {
+      // Add 2 second delay to allow frame metadata to be fetched
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
       const {
         data: { message },
       } = await axios.post<{ message: string }>("/api/cast", {
@@ -49,6 +55,8 @@ const Home = () => {
         position: "bottom-right",
         pauseOnHover: true,
       });
+    } finally {
+      setIsPosting(false);
     }
   }
 
