@@ -75,7 +75,8 @@ const Signin = () => {
 
   const { setSignerUuid, setFid } = useApp();
   const client_id = process.env.NEXT_PUBLIC_NEYNAR_CLIENT_ID;
-  const neynar_login_url = process.env.NEXT_PUBLIC_NEYNAR_LOGIN_URL || "https://app.neynar.com/login";
+  const neynar_login_url =
+    process.env.NEXT_PUBLIC_NEYNAR_LOGIN_URL || "https://app.neynar.com/login";
 
   if (!client_id) {
     throw new Error("NEXT_PUBLIC_NEYNAR_CLIENT_ID is not defined in .env");
@@ -192,7 +193,7 @@ const Signin = () => {
           </h2>
 
           {getButton()}
-          <div className="flex flex-wrap gap-4 justify-center items-center p-4 mt-20 max-w-6xl">
+          {/* <div className="flex flex-wrap gap-4 justify-center items-center p-4 mt-20 max-w-6xl">
             {renderThemeDropdown(variant)}
             {renderVariantDropdown()}
             <div className="flex flex-col items-start p-2 rounded shadow-sm">
@@ -337,7 +338,7 @@ const Signin = () => {
                 placeholder="https://demo.neynar.com/logos/wownar-black.svg"
               />
             </div>
-          </div>
+          </div> */}
         </div>
       </main>
     </ScreenLayout>
