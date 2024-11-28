@@ -96,6 +96,14 @@ const Home = () => {
     }
   };
 
+  const handlePostToWarpcast = () => {
+    if (!frameUrl) return;
+    window.open(
+      `https://warpcast.com/~/compose?text=${encodeURIComponent(frameUrl)}`,
+      "_blank"
+    );
+  };
+
   return (
     <ScreenLayout>
       <main className="flex flex-col flex-grow justify-center items-center">
@@ -131,6 +139,10 @@ const Home = () => {
               ) : (
                 <>
                   <Button onClick={handleViewFrame} title="View Frame" />
+                  <Button
+                    onClick={handlePostToWarpcast}
+                    title="Post to Warpcast"
+                  />
                   <Button
                     onClick={handlePublishCast}
                     title={isPosting ? "Posting..." : "Cast Frame"}
