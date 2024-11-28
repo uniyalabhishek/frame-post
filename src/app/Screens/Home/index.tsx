@@ -15,16 +15,23 @@ import { useState } from "react";
 const Home = () => {
   const [user] = useLocalStorage<UserInfo>("user");
   const { displayName, pfp } = useApp();
-  const [text, setText] = useState("");
+  const [title, setTitle] = useState("");
+  const [frameId, setFrameId] = useState<string | null>(null);
+
+  const frameUrl = frameId
+    ? `${window.location.origin}/frames?id=${frameId}`
+    : null;
 
   async function handlePublishCast() {
+    if (!frameUrl) return;
+
     const { signerUuid } = user;
     try {
       const {
         data: { message },
       } = await axios.post<{ message: string }>("/api/cast", {
         signerUuid,
-        text,
+        text: frameUrl,
       });
       toast(message, {
         type: "success",
@@ -33,7 +40,6 @@ const Home = () => {
         position: "bottom-right",
         pauseOnHover: true,
       });
-      setText("");
     } catch (err) {
       const { message } = (err as AxiosError).response?.data as ErrorRes;
       toast(message, {
@@ -46,6 +52,42 @@ const Home = () => {
     }
   }
 
+  const handleViewFrame = () => {
+    if (!frameUrl) return;
+    window.open(
+      `https://warpcast.com/~/developers/frames?url=${encodeURIComponent(
+        frameUrl
+      )}`,
+      "_blank"
+    );
+  };
+
+  const handleSaveTitle = async () => {
+    if (title.length > 20) {
+      toast("Title must be 20 characters or less", {
+        type: "error",
+        theme: "dark",
+        autoClose: 3000,
+        position: "bottom-right",
+      });
+      return;
+    }
+
+    try {
+      const { data } = await axios.post<{ frameId: string }>("/api/frames", {
+        title,
+      });
+      setFrameId(data.frameId);
+    } catch (err) {
+      toast("Failed to create frame", {
+        type: "error",
+        theme: "dark",
+        autoClose: 3000,
+        position: "bottom-right",
+      });
+    }
+  };
+
   return (
     <ScreenLayout>
       <main className="flex flex-col flex-grow justify-center items-center">
@@ -56,7 +98,6 @@ const Home = () => {
               {displayName && (
                 <span className="font-medium">{displayName}</span>
               )}
-              ... 👋
             </p>
             <div className={styles.inputContainer}>
               <Image
@@ -67,14 +108,25 @@ const Home = () => {
                 className={`${styles.profilePic} rounded-full`}
               />
               <textarea
-                value={text}
-                onChange={(e) => setText(e.target.value)}
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
                 className={styles.userInput}
-                placeholder="Say Something"
-                rows={5}
+                placeholder="Enter frame title (max 20 chars)"
+                rows={2}
+                maxLength={20}
+                disabled={!!frameId}
               />
             </div>
-            <Button onClick={handlePublishCast} title="Cast" />
+            <div className="flex gap-4">
+              {!frameId ? (
+                <Button onClick={handleSaveTitle} title="Save Title" />
+              ) : (
+                <>
+                  <Button onClick={handleViewFrame} title="View Frame" />
+                  <Button onClick={handlePublishCast} title="Cast Frame" />
+                </>
+              )}
+            </div>
           </>
         ) : (
           <p>Loading...</p>
