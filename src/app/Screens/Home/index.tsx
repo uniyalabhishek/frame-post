@@ -98,8 +98,11 @@ const Home = () => {
 
   const handlePostToWarpcast = () => {
     if (!frameUrl) return;
+    const trimmedUrl = frameUrl.trim();
     window.open(
-      `https://warpcast.com/~/compose?text=${encodeURIComponent(frameUrl)}`,
+      `https://warpcast.com/~/compose?text=${encodeURIComponent(
+        trimmedUrl
+      )}&cursor=${trimmedUrl.length}`,
       "_blank"
     );
   };
