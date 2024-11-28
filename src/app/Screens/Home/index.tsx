@@ -131,7 +131,11 @@ const Home = () => {
               ) : (
                 <>
                   <Button onClick={handleViewFrame} title="View Frame" />
-                  <Button onClick={handlePublishCast} title="Cast Frame" />
+                  <Button
+                    onClick={handlePublishCast}
+                    title={isPosting ? "Posting..." : "Cast Frame"}
+                    disabled={isPosting}
+                  />
                 </>
               )}
             </div>
